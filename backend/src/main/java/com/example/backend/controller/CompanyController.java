@@ -1,5 +1,6 @@
 package com.example.backend.controller;
 
+import com.example.backend.dto.CompanyRequest;
 import com.example.backend.models.Company;
 import com.example.backend.response.CompanyResponse;
 import com.example.backend.services.CompanyService;
@@ -19,7 +20,7 @@ public class CompanyController {
 
     // Lấy danh sách tất cả Company
     @GetMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ApiResponse<List<CompanyResponse>> getAllCompanies() {
         List<Company> companies = companyService.getAllCompany();
 
@@ -53,12 +54,12 @@ public class CompanyController {
         return new ApiResponse<>("Success", 200, companyResponse);
     }
 
-    // Tạo mới Company
     @PostMapping("/create")
     @PreAuthorize("hasRole('ADMIN')")
-    public ApiResponse<CompanyResponse> createCompany(@RequestBody Company company) {
-        Company createdCompany = companyService.createCompany(company);
+    public ApiResponse<CompanyResponse> createCompany(@RequestBody CompanyRequest companyRequest) {
+        Company createdCompany = companyService.createCompany(companyRequest);
 
+        // Prepare the response
         CompanyResponse companyResponse = new CompanyResponse(
                 createdCompany.getId(),
                 createdCompany.getName(),
@@ -68,11 +69,12 @@ public class CompanyController {
         return new ApiResponse<>("Company created successfully", 201, companyResponse);
     }
 
+
     // Cập nhật Company theo ID
     @PutMapping("/update/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ApiResponse<CompanyResponse> updateCompany(@PathVariable Long id, @RequestBody Company company) {
-        Company updatedCompany = companyService.updateCompany(id, company);
+    public ApiResponse<CompanyResponse> updateCompany(@PathVariable Long id, @RequestBody CompanyRequest companyRequest) {
+        Company updatedCompany = companyService.updateCompany(id, companyRequest);
 
         CompanyResponse companyResponse = new CompanyResponse(
                 updatedCompany.getId(),
@@ -82,6 +84,7 @@ public class CompanyController {
 
         return new ApiResponse<>("Company updated successfully", 200, companyResponse);
     }
+
 
     // Xóa Company theo ID
     @DeleteMapping("/delete/{id}")

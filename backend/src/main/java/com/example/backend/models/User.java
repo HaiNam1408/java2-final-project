@@ -2,6 +2,9 @@ package com.example.backend.models;
 
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -27,8 +30,11 @@ public class User {
     private Set<Role> roles = new HashSet<>();
 
     @ManyToOne
-    @JoinColumn(name = "company_id")
+    @JoinColumn(name = "company_id", foreignKey = @ForeignKey(name = "fk_user_company", value = ConstraintMode.CONSTRAINT), nullable = true)
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     private Company company;
+
+
 
     // Getters và setters
     public Long getId() {

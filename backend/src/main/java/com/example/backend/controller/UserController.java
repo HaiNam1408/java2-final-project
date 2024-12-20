@@ -31,13 +31,13 @@ public class UserController {
         List<User> users = userService.getAllUsers();
 
         List<UserResponse> userResponses = users.stream().map(user -> {
-            Long companyId = (user.getCompany() != null) ? user.getCompany().getId() : null;
+            String company = (user.getCompany() != null) ? user.getCompany().getName() : null;
             return new UserResponse(
                     user.getId(),
                     user.getFirstname(),
                     user.getLastname(),
                     user.getEmail(),
-                    companyId,
+                    company,
                     user.getRoles().stream().map(role -> role.getName()).collect(Collectors.toList())
             );
         }).collect(Collectors.toList());
@@ -55,13 +55,13 @@ public class UserController {
         if (user == null) {
             return new ApiResponse("Not found", 404);
         }
-        Long companyId = (user.getCompany() != null) ? user.getCompany().getId() : null;
+        String company = (user.getCompany() != null) ? user.getCompany().getName() : null;
         UserResponse userResponse = new UserResponse(
                 user.getId(),
                 user.getFirstname(),
                 user.getLastname(),
                 user.getEmail(),
-                companyId,
+                company,
                 user.getRoles().stream().map(role -> role.getName()).collect(Collectors.toList())
         );
 
@@ -74,13 +74,13 @@ public class UserController {
     public ApiResponse<UserResponse> createUser(@RequestBody UserRequest userRequest) {
         User createdUser = userService.createUser(userRequest);
 
-        Long companyId = (createdUser.getCompany() != null) ? createdUser.getCompany().getId() : null;
+        String company = (createdUser.getCompany() != null) ? createdUser.getCompany().getName() : null;
         UserResponse userResponse = new UserResponse(
                 createdUser.getId(),
                 createdUser.getFirstname(),
                 createdUser.getLastname(),
                 createdUser.getEmail(),
-                companyId,
+                company,
                 createdUser.getRoles().stream().map(Role::getName).collect(Collectors.toList()) // Chuyển từ Set sang List
         );
 
@@ -119,13 +119,13 @@ public class UserController {
         User updatedUser = userService.updateUser(id, userToUpdate);
 
         // Tạo UserResponse để trả về
-        Long companyId = (updatedUser.getCompany() != null) ? updatedUser.getCompany().getId() : null;
+        String company = (updatedUser.getCompany() != null) ? updatedUser.getCompany().getName()     : null;
         UserResponse userResponse = new UserResponse(
                 updatedUser.getId(),
                 updatedUser.getFirstname(),
                 updatedUser.getLastname(),
                 updatedUser.getEmail(),
-                companyId,
+                company,
                 updatedUser.getRoles().stream().map(role -> role.getName()).collect(Collectors.toList())
         );
 

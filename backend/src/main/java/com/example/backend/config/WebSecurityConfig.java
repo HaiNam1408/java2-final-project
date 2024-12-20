@@ -15,6 +15,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
@@ -43,10 +46,26 @@ public class WebSecurityConfig {
     }
 
     @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.addAllowedOrigin("*");
+        configuration.addAllowedMethod("*");  // Cho phép tất cả phương thức HTTP
+        configuration.addAllowedHeader("*");  // Cho phép tất cả header
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);  // Áp dụng cho tất cả các endpoint
+        return source;
+    }
+
+    @Bean
     protected SecurityFilterChain filterChain(HttpSecurity http, CustomAccessDeniedHandler customAccessDeniedHandler) throws Exception {
         return http
                 .csrf(csrf -> csrf.disable())
                 .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable()))
+                .cors(httpSecurityCorsConfigurer -> corsConfigurationSource())
+                .authorizeHttpRequests(request -> request
+                .requestMatchers("/register", "/api/auth/generateToken", "/api/auth/register", "/h2-console/**").permitAll()
+                .anyRequest().authenticated())
                 .httpBasic(httpBasic -> httpBasic.disable())
                 .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(exceptionHandling ->

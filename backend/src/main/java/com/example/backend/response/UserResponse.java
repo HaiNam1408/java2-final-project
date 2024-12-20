@@ -7,15 +7,15 @@ public class UserResponse {
     private String firstname;
     private String lastname;
     private String email;
-    private Long companyId;
+    private String company;
     private List<String> roles;
 
-    public UserResponse(Long id, String firstname, String lastname, String email, Long company, List<String> roles) {
+    public UserResponse(Long id, String firstname, String lastname, String email, String company, List<String> roles) {
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
         this.email = email;
-        this.companyId = company;
+        this.company = company;
         this.roles = roles;
     }
 
@@ -51,12 +51,12 @@ public class UserResponse {
         this.email = email;
     }
 
-    public Long getCompany() {
-        return companyId;
+    public String getCompany() {
+        return company;
     }
 
-    public void setCompany(Long company) {
-        this.companyId = company;
+    public void setCompany(String company) {
+        this.company = company;
     }
 
     public List<String> getRoles() {

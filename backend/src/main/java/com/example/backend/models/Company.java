@@ -16,7 +16,7 @@ public class Company {
 
     private String name;
 
-    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "company", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<User> users = new ArrayList<>();
 
     // Getters và setters

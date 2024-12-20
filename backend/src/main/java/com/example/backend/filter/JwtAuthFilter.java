@@ -34,6 +34,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             throws JwtAuthenticationException, ServletException, IOException {
 
         try {
+            if (request.getRequestURI().equals("/api/auth/generateToken") || request.getRequestURI().equals("/api/auth/register")) {
+                filterChain.doFilter(request, response);
+                return;
+            }
             String authHeader = request.getHeader("Authorization");
             String token = null;
             String username = null;
